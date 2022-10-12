@@ -55,14 +55,15 @@ if True:
     path_list = []
 
 
-# cписок имен файлов ВК
-def files_list(i):
+# cписки имен и путей файлов ВК
+def lists_name_path_files(i):
     for root, dirs, files in os.walk(i):
         for file in files:
-            if file.endswith('ВК.xlsx') and not file.startswith('~$') \
-                    or file.endswith('ВК.xls') and not file.startswith('~$') \
-                    or file.endswith('ВК.xlsm') and not file.startswith('~$'):
+            if file.endswith('ВК.xlsx') and not '~$' in file \
+                    or file.endswith('ВК.xls') and not '~$' in file \
+                    or file.endswith('ВК.xlsm') and not '~$' in file:
                 file_list.append(os.path.join(file))
+                path_list.append(os.path.join(root, file))
     if len(file_list) > 0:
         print(f'В папке с проектом найдено {len(file_list)} файлов для обновления')
         answer = dialog_yes_no('Вывести список файлов для обновления?\nВведите Y или N')
@@ -72,17 +73,10 @@ def files_list(i):
     else:
         print(input('Список пуст. Что-то пошло не так! Перезапустите программу...'))
         sys.exit()
-    return file_list
+    return file_list, path_list
 
 
-# список открытых файлов проекта
-def file_list_open(i):
-    files_open = files_path(path_folder)
-    for j in files_open:
-        file_check(j)
-
-
-# Функция проверки дублей файлов
+# проверка дублей файлов
 def double(i):
     visited = set()
     dup = [x for x in i if x in visited or (visited.add(x) or False)]
@@ -93,15 +87,10 @@ def double(i):
         sys.exit()
 
 
-# получение списка путей к файлам ВК
-def files_path(i):
-    for root, dirs, files in os.walk(i):
-        for file in files:
-            if file.endswith('ВК.xlsx') and not '~$' in file \
-                    or file.endswith('ВК.xls') and not '~$' in file \
-                    or file.endswith('ВК.xlsm') and not '~$' in file:
-                path_list.append(os.path.join(root, file))
-    return path_list
+# проверка на открытые файлы ВК
+def file_list_open(i):
+    for j in i:
+        file_check(j)
 
 
 # Проверка файла на присутствие и незанятость
@@ -123,14 +112,8 @@ def file_check(file):
     return valid
 
 
-# печать списков
-def print_list(i):
-    for j in i:
-        print(j)
-
-
 # открытие / обоновление / сохранение / обновление файла Базы данных
-def open_DB(i):
+def refresh_DB(i):
     file_check(i)
     print("Обновление файла Базы данных...")
     wb = excel.Workbooks.open(i)
@@ -178,17 +161,20 @@ def dialog_yes_no(i):
         else:
             print('Ожидалось Y или N')
 
+# печать списков
+def print_list(i):
+    for j in i:
+        print(j)
+
 
 # Тело программы
-# open_DB(file_path_DB)
+refresh_DB(file_path_DB)
 
-# files_list(path_folder)
-
-# file_list_open(path_folder)
+lists_name_path_files(path_folder)
 
 double(file_list)
 
-files_path(path_folder)
+file_list_open(path_list)
 
 print('Файлы готовы к обновлению')
 user_answer = dialog_yes_no('Обновить файлы?\nВведите Y или N')
@@ -212,7 +198,7 @@ print(f'Обновлено {len(path_list)} файлов в списке')
 
 print('_' * 100)
 
-open_DB(file_path_DB)
+refresh_DB(file_path_DB)
 
 endTime = time.time()
 totalTime = endTime - startTime
