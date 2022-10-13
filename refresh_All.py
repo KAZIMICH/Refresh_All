@@ -14,6 +14,7 @@ startTime = time.time()
 # Описание работы приложения
 if True:
     print('Творящий РКД приветствую тебя!')
+
     # print('Программа обновления файлов excel РКД проекта Т40В:')
     # print(r'-    ищет все файлы excel в папке проекта \n\\192.168.1.98\electric group\T40B\03 ПРОЕКТ док T40B\01 T40B '
     #       r'ПДСП\04 Электрика\nс суффиксом ВК')
@@ -190,7 +191,7 @@ def print_list(i):
 
 
 # Тело программы
-# refresh_DB(file_path_DB)
+refresh_DB(file_path_DB)
 
 lists_name_path_files(path_folder)
 
@@ -216,7 +217,7 @@ print('_' * 100)
 
 print('Обновление файлов взаимодействия с NX')
 refresh_files(NX_list)
-print(f'Обновлено {len(path_list)} файлов в списке')
+print(f'Обновлено {len(NX_list)} файлов в списке')
 
 print('_' * 100)
 
@@ -227,3 +228,5 @@ totalTime = endTime - startTime
 print('Программа завершена')
 print(input(f'Затраченное время = {int(totalTime)} секунд\n'))
 sys.exit()
+
+# исправить косяк в отрытии файла БД в конце. Открывает только для чтения. Не запрашивает режим редактирования
