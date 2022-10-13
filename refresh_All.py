@@ -59,16 +59,19 @@ if True:
 def lists_name_path_files(i):
     for root, dirs, files in os.walk(i):
         for file in files:
-            if file.endswith('ВК.xlsx') and not '~$' in file \
-                    or file.endswith('ВК.xls') and not '~$' in file \
-                    or file.endswith('ВК.xlsm') and not '~$' in file:
+            if file.endswith('ВК.xlsx') and '~$' not in file \
+                    or file.endswith('ВК.xls') and '~$' not in file \
+                    or file.endswith('ВК.xlsm') and '~$' not in file:
                 file_list.append(os.path.join(file))
                 path_list.append(os.path.join(root, file))
+
     if len(file_list) > 0:
         print(f'В папке с проектом найдено {len(file_list)} файлов для обновления')
         answer = dialog_yes_no('Вывести список файлов для обновления?\nВведите Y или N')
         if answer == 'y':
             print_list(file_list)
+            print('_' * 100)
+        else:
             print('_' * 100)
     else:
         print(input('Список пуст. Что-то пошло не так! Перезапустите программу...'))
@@ -78,6 +81,7 @@ def lists_name_path_files(i):
 
 # проверка дублей файлов
 def double(i):
+    print('Проверка есть ли дубли файлов...')
     visited = set()
     dup = [x for x in i if x in visited or (visited.add(x) or False)]
     if len(dup) > 0:
@@ -85,12 +89,29 @@ def double(i):
             print(f'Документ {j} присутствует несколько раз')
         print(input('Удалите неактуальный файл(ы) и перезапустите приложение'))
         sys.exit()
+    else:
+        print('Дублей файлов не найдено.')
+        print('_' * 100)
 
 
 # проверка на открытые файлы ВК
 def file_list_open(i):
+    print('Проверка есть ли открытые файлы...')
+    list_open = []
+    for root, dirs, files in os.walk(path_folder):
+        for file in files:
+            if file.endswith('ВК.xlsx') and '~$' in file \
+                    or file.endswith('ВК.xls') and '~$' in file \
+                    or file.endswith('ВК.xlsm') and '~$' in file:
+                list_open.append(os.path.join(file))
+    if len(list_open) > 0:
+        print('Закройте файлы...:')
+        print_list(list_open)
+        print(input('После закрытия файлов введите Enter.\n'))
     for j in i:
         file_check(j)
+    print('Проверка на открытые файлы завершена.')
+    print('_' * 100)
 
 
 # Проверка файла на присутствие и незанятость
@@ -155,11 +176,12 @@ def dialog_yes_no(i):
     while True:
         answers = {'yes': 1, 'y': 1, 'no': 0, 'n': 0}
         print(i)
-        user_answer = input().lower()
-        if user_answer in answers:
-            return user_answer
+        answer = input().lower()
+        if answer in answers:
+            return answer
         else:
             print('Ожидалось Y или N')
+
 
 # печать списков
 def print_list(i):
@@ -168,7 +190,7 @@ def print_list(i):
 
 
 # Тело программы
-refresh_DB(file_path_DB)
+# refresh_DB(file_path_DB)
 
 lists_name_path_files(path_folder)
 
