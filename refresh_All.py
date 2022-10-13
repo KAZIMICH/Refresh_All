@@ -227,5 +227,3 @@ totalTime = endTime - startTime
 print('Программа завершена')
 print(input(f'Затраченное время = {int(totalTime)} секунд\n'))
 sys.exit()
-
-# тестировать
