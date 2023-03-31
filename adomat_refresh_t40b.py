@@ -7,7 +7,7 @@ import time
 # импорт остановки выполнения
 import sys
 
-excel = win32com.client.Dispatch("Excel.Application")
+excel = win32com.client.Dispatch("Excel.Application") #  Ex!!!
 # время старта приложения
 startTime = time.time()
 
